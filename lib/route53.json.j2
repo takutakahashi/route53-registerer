@@ -1,0 +1,12 @@
+{
+    "Comment": "CREATE/DELETE/UPSERT a record ",
+    "Changes": [{
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+            "Name": "{{ record }}",
+            "Type": "A",
+            "TTL": 300,
+            "ResourceRecords": [{ "Value": "{{ address }}"}]
+        }
+    }]
+}
