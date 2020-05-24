@@ -4,9 +4,9 @@
         "Action": "UPSERT",
         "ResourceRecordSet": {
             "Name": "{{ record }}",
-            "Type": "A",
+            "Type": "{{ type }}",
             "TTL": 300,
-            "ResourceRecords": [{ "Value": "{{ address }}"}]
+            "ResourceRecords": [{ "Value": "{{ val }}"}]
         }
     }]
 }
