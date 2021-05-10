@@ -1,11 +1,25 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
-RECORD=$1
-TYPE=$2
-VAL=$3
-ZONE=`python lib/detect_zone.py $RECORD |jq -r '.zone' `
-DOMAIN=`python lib/detect_zone.py $RECORD |jq -r '.record' `
-ZONE_ID=`aws route53 list-hosted-zones |jq -r --arg ZONE "${ZONE}." ' .[] |select (.[].Name == $ZONE) | .[].Id '`
-python lib/parse_j2.py $RECORD $TYPE $VAL > file.json
+if [[ "$RECORD_NAME" = "" ]]; then
+  exit 1
+fi
+if [[ "$TYPE" = "" ]]; then
+  exit 1
+fi
+if [[ "$VAL" = "" ]]; then
+  exit 1
+fi
+if [[ "$HOSTED_ZONE_ID" = "" ]]; then
+  exit 1
+fi
 
-aws route53 change-resource-record-sets --hosted-zone-id $ZONE_ID --change-batch file://file.json
+if [[ "$ALIAS" = "true" ]]; then
+  python lib/parse_j2.py lib/route53_alias.json.j2 > file.json
+else
+  python lib/parse_j2.py lib/route53.json.j2 > file.json
+fi
+if [[ "$DRY_RUN" != "true" ]]; then
+  aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://file.json
+else
+  cat file.json
+fi

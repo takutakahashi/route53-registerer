@@ -1,0 +1,15 @@
+{
+    "Comment": "CREATE/DELETE/UPSERT a record ",
+    "Changes": [{
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+            "Name": "{{ record }}",
+            "Type": "{{ type }}",
+            "AliasTarget": {
+              "HostedZoneId": "{{ hosted_zone_id }}",
+              "DNSName": "{{ val }}",
+              "EvaluateTargetHealth": true
+            }
+        }
+    }]
+}
