@@ -13,6 +13,12 @@ if [[ "$HOSTED_ZONE_ID" = "" ]]; then
   exit 1
 fi
 
+if [[ "$DEBUG" = "true" ]]; then
+  DEBUG="--debug"
+else
+  DEBUG=""
+fi
+
 if [[ "$ALIAS" = "true" ]]; then
   python lib/parse_j2.py lib/route53_alias.json.j2 > file.json
 else
@@ -22,5 +28,5 @@ echo "---------- request below ------------"
 cat file.json
 echo "---------- request above ------------"
 if [[ "$DRY_RUN" != "true" ]]; then
-  aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://file.json
+  aws $DEBUG route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://file.json
 fi
