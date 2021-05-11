@@ -1,6 +1,8 @@
 {
     "Comment": "CREATE/DELETE/UPSERT a record ",
-    "Changes": [{
+    "Changes": [
+    {%- for record in records %}
+      {
         "Action": "UPSERT",
         "ResourceRecordSet": {
             "Name": "{{ record }}",
@@ -11,5 +13,11 @@
               "EvaluateTargetHealth": true
             }
         }
-    }]
+    {%- if record == records|last %}
+      }
+    {%- else %}
+      },
+    {%- endif %}
+    {%- endfor %}
+    ]
 }
