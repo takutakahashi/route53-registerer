@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 if [[ "$RECORD_NAME" = "" ]]; then
   exit 1
@@ -18,8 +18,9 @@ if [[ "$ALIAS" = "true" ]]; then
 else
   python lib/parse_j2.py lib/route53.json.j2 > file.json
 fi
+echo "---------- request below ------------"
+cat file.json
+echo "---------- request above ------------"
 if [[ "$DRY_RUN" != "true" ]]; then
   aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://file.json
-else
-  cat file.json
 fi
